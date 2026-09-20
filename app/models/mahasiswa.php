@@ -2,70 +2,40 @@
 
 class Mahasiswa
 {
-    public function getAll()
+    private $pdo;
+
+    public function __construct($pdo)
     {
-        return [
-            [
-                'nim' => '23001',
-                'nama' => 'Ingka Jivanda',
-                'prodi' => 'Teknik Informatika'
-            ],
-            [
-                'nim' => '23002',
-                'nama' => 'Kristanto EKa',
-                'prodi' => 'Sistem Informasi'
-            ],
-            [
-                'nim' => '23003',
-                'nama' => 'Della Dwi',
-                'prodi' => 'Teknik Komputer'
-            ],
-            [
-                'nim' => '23004',
-                'nama' => 'Nila Agustin',
-                'prodi' => 'Teknik Elektro'
-            ],
-            [
-                'nim' => '23005',
-                'nama' => 'Rizki Yudha',
-                'prodi' => 'Teknik Mesin'
-            ],
-            [
-                'nim' => '23006',
-                'nama' => 'Sheryn Febrylia',
-                'prodi' => 'Teknik Sipil'
-            ],
-            [
-                'nim' => '23007',
-                'nama' => 'Fajar Rizki',
-                'prodi' => 'Manajemen Informatika'
-            ],
-            [
-                'nim' => '23008',
-                'nama' => 'Dinda Febiola',
-                'prodi' => 'Teknik Informatika'
-            ],
-            [
-                'nim' => '23009',
-                'nama' => 'Alya',
-                'prodi' => 'Sistem Informasi'
-            ]
-        ];
+        $this->pdo = $pdo;
     }
 
+    public function getAll()
+    {
+        $sql = "SELECT mahasiswa.*, dosen.nama AS nama_dosen
+                FROM mahasiswa
+                LEFT JOIN dosen
+                ON mahasiswa.dosen_id = dosen.id
+                ORDER BY mahasiswa.nama ASC";
+
+        $stmt = $this->pdo->query($sql);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function getByNim($nim)
     {
-        $mahasiswa = $this->getAll();
+        $stmt = $this->pdo->prepare(
+            "SELECT mahasiswa.*, dosen.nama AS nama_dosen
+             FROM mahasiswa
+             LEFT JOIN dosen
+             ON mahasiswa.dosen_id = dosen.id
+             WHERE mahasiswa.nim = :nim"
+        );
 
-        foreach ($mahasiswa as $mhs) {
+        $stmt->execute([
+            'nim' => $nim
+        ]);
 
-            if ($mhs['nim'] == $nim) {
-
-                return $mhs;
-            }
-        }
-
-        return null;
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

@@ -113,6 +113,7 @@
                     <th>NIM</th>
                     <th>Nama</th>
                     <th>Program Studi</th>
+                    <th>Dosen Pembimbing</th>
                     <th>Aksi</th>
                 </tr>
 
@@ -134,6 +135,10 @@
 
                         <td>
                             <?= htmlspecialchars($mhs['prodi']) ?>
+                        </td>
+
+                        <td>
+                            <?= htmlspecialchars($mhs['nama_dosen'] ?? '-') ?>
                         </td>
 
                         <td>

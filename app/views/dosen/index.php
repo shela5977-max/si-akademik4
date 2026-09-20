@@ -3,169 +3,206 @@
 
 <head>
 
-    <meta charset="UTF-8">
+	<meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1">
+	<meta name="viewport"
+		  content="width=device-width, initial-scale=1">
 
-    <title>Daftar Dosen</title>
+	<title>Daftar Dosen</title>
 
-    <style>
+	<style>
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #ffffff;
-            color: #333;
-            margin: 0;
-        }
+		body {
+			font-family: Arial, sans-serif;
+			background: #ffffff;
+			color: #333;
+			margin: 0;
+		}
 
-        .container {
-            width: 90%;
-            max-width: 1000px;
-            margin: 40px auto;
-        }
+		.container {
+			width: 90%;
+			max-width: 1000px;
+			margin: 40px auto;
+		}
 
-        h1 {
-            color: #496a5a;
-            margin-bottom: 5px;
-        }
+		h1 {
+			color: #496a5a;
+			margin-bottom: 5px;
+		}
 
-        h2 {
-            color: #555;
-            font-size: 22px;
-            margin-bottom: 25px;
-        }
+		h2 {
+			color: #555;
+			font-size: 22px;
+			margin-bottom: 25px;
+		}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
 
-        th {
-            background: #dce9df;
-            color: #385044;
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #b8c9bc;
-        }
+		th {
+			background: #dce9df;
+			color: #385044;
+			padding: 12px;
+			text-align: left;
+			border: 1px solid #b8c9bc;
+		}
 
-        td {
-            padding: 12px;
-            border: 1px solid #d6d6d6;
-        }
+		td {
+			padding: 12px;
+			border: 1px solid #d6d6d6;
+		}
 
-        tr:hover {
-            background: #f5f8f5;
-        }
+		tr:hover {
+			background: #f5f8f5;
+		}
 
-        .back {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 9px 15px;
-            background: #496a5a;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-        }
+		.button-area {
+			margin-top: 20px;
+		}
 
-        .back:hover {
-            background: #385044;
-        }
+		.button {
+			display: inline-block;
+			padding: 9px 15px;
+			margin-right: 8px;
+			text-decoration: none;
+			border-radius: 4px;
+		}
 
-    </style>
+		.button-dashboard {
+			background: #496a5a;
+			color: white;
+		}
+
+		.button-mahasiswa {
+			background: #dce9df;
+			color: #385044;
+		}
+
+		.button-add,
+		.button-edit {
+			background: #496a5a;
+			color: white;
+		}
+
+		.button-delete {
+			background: #f3d7d7;
+			color: #8a3030;
+			border: 0;
+			cursor: pointer;
+			font: inherit;
+		}
+
+		.inline-form {
+			display: inline;
+		}
+
+	</style>
 
 </head>
 
 <body>
 
-<div class="container">
+	<div class="container">
 
-    <h1>
-        Sistem Akademik
-    </h1>
+		<h1>
+			Sistem Akademik
+		</h1>
 
-    <h2>
-        Daftar Dosen
-    </h2>
+		<h2>
+			Daftar Dosen
+		</h2>
 
+		<table>
 
-    <table>
+			<thead>
 
-        <thead>
+				<tr>
+					<th>No</th>
+					<th>NIDN</th>
+					<th>Nama</th>
+					<th>Bidang Keahlian</th>
+					<th>Aksi</th>
+				</tr>
 
-            <tr>
+			</thead>
 
-                <th>
-                    NIDN
-                </th>
+			<tbody>
 
-                <th>
-                    Nama Dosen
-                </th>
+				<?php foreach (($dosen ?? []) as $index => $item): ?>
 
-                <th>
-                    Program Studi
-                </th>
+					<tr>
 
-            </tr>
+						<td>
+							<?= $index + 1 ?>
+						</td>
 
-        </thead>
+						<td>
+							<?= htmlspecialchars($item['nidn'], ENT_QUOTES, 'UTF-8') ?>
+						</td>
 
+						<td>
+							<?= htmlspecialchars($item['nama'], ENT_QUOTES, 'UTF-8') ?>
+						</td>
 
-        <tbody>
+						<td>
+							<?= htmlspecialchars($item['bidang_keahlian'], ENT_QUOTES, 'UTF-8') ?>
+						</td>
 
-            <?php foreach (($dosen ?? []) as $dataDosen): ?>
+						<td>
+							<a
+								class="button button-edit"
+								href="/si-akademik4/public/dosen/edit?id=<?= htmlspecialchars(urlencode($item['id']), ENT_QUOTES, 'UTF-8') ?>"
+							>
+								Edit
+							</a>
 
-                <tr>
+							<form
+								class="inline-form"
+								action="/si-akademik4/public/dosen/delete"
+								method="post"
+								onsubmit="return confirm('Hapus data dosen ini?');"
+							>
+								<input type="hidden" name="id" value="<?= htmlspecialchars($item['id'], ENT_QUOTES, 'UTF-8') ?>">
+								<button class="button button-delete" type="submit">Hapus</button>
+							</form>
+						</td>
 
-                    <td>
-                        <?= htmlspecialchars($dataDosen['nidn']) ?>
-                    </td>
+					</tr>
 
-                    <td>
-                        <?= htmlspecialchars($dataDosen['nama']) ?>
-                    </td>
+				<?php endforeach; ?>
 
-                    <td>
-                        <?= htmlspecialchars($dataDosen['prodi']) ?>
-                    </td>
+			</tbody>
 
-                </tr>
+		</table>
 
-            <?php endforeach; ?>
+		<div class="button-area">
 
-        </tbody>
+			<a
+				class="button button-add"
+				href="/si-akademik4/public/dosen/create"
+			>
+				Tambah Dosen
+			</a>
 
-    </table>
+			<a
+				class="button button-dashboard"
+				href="/si-akademik4/public/dashboard"
+			>
+				Dashboard
+			</a>
 
+			<a
+				class="button button-mahasiswa"
+				href="mahasiswa"
+			>
+				Daftar Mahasiswa
+			</a>
 
-    <br>
+		</div>
 
-
-    <a
-        class="back"
-        href="/si-akademik4/public/dashboard"
-    >
-        Kembali ke Dashboard
-    </a>
-
-
-    <a
-        class="back"
-        href="/si-akademik4/public/mahasiswa"
-    >
-        Mahasiswa
-    </a>
-
-
-    <a
-        class="back"
-        href="/si-akademik4/public/logout"
-    >
-        Logout
-    </a>
-
-</div>
+	</div>
 
 </body>
 
